@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Username App</title>
+</head>
+<body>
+
+    <div>
+        <h2>All Usernames</h2>
+        <ul id="products" />
+    </div>
+    <div>
+        Username: <input type="text" id="uid" size="5" /><br>
+        Password: <input type="text" id="pid" size="5" /><br>
+        <input type="button" value="Login" onclick="auth();" />
+        <p id="product" />
+    </div>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+    var uri = 'auth';
+
+    $(document).ready(function () {
+      // Send an AJAX request
+      $.getJSON(uri)
+          .done(function (data) {
+            // On success, 'data' contains a list of products.
+            $.each(data, function (key, item) {
+              // Add a list item for the product.
+              $('<li>', { text: formatItem(item) }).appendTo($('#products'));
+            });
+          });
+    });
+
+    function formatItem(item) {
+      return item.Name + ' : ' + item.Password;
+    }
+
+    function find() {
+        var unid = $('#uid').val();
+        var pwid = $('#pid').val();
+      $.getJSON(uri + '/' + unid)
+          .done(function (data) {
+            $('#product').text(formatItem(data));
+          })
+          .fail(function (jqXHR, textStatus, err) {
+            $('#product').text('Error: ' + err);
+          });
+
+      function auth() {
+          var unid = $('#uid').val();
+          var pwid = $('#pid').val();
+          $.getJSON(uri)
+              .done(function (data) {
+                  $('#product').text(formatItem(data));
+              })
+              .fail(function (jqXHR, textStatus, err) {
+                  $('#product').text('Error: ' + err);
+              });
+    }
+    </script>
+</body>
+</html>
